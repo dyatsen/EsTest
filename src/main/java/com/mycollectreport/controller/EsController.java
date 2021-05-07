@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -22,7 +23,7 @@ public class EsController {
         System.out.println("===========开始===========");
         // 调用service实现类的方法进行处理
 
-        Map<String, Long> counts = null;
+        Map<String, Long> counts = new HashMap<>();
         try {
             counts = elasticsearchService.getCounts();
         } catch (IOException e) {
