@@ -1,0 +1,40 @@
+spring:
+  redis:
+    database: 0
+    host: 192.168.110.128
+    #    虚拟机：192.168.110.128  远程：10.142.157.192
+    port: 6379
+
+xxljob:
+  datasource:
+    url: jdbc:postgresql://10.143.16.86:18921/xxl_job
+    username: uccp_5gc
+    password: ENC(TbY2BuCVUSm+oijNg+yyh2eKztuxec3H)
+    driverClassName: org.postgresql.Driver
+    mapperLocations: classpath:/postgres-mapper/XxlJobLogMapper.xml
+
+umc:
+  datasource:
+    url: jdbc:postgresql://10.143.16.86:18921/umc
+    username: uccp_5gc
+    password: ENC(TbY2BuCVUSm+oijNg+yyh2eKztuxec3H)
+    driverClassName: org.postgresql.Driver
+    mapperLocations: classpath:/postgres-mapper/SrcAlarmMapper.xml
+
+scheduled:
+  report:
+    day:
+      cron: 0 0 7 ? * *
+    hour:
+      cron: 0 3 * * * ?
+  check:
+    day:
+      cron: 0 30 7 ? * *
+  keep:
+    live:
+      cron: 0 0/1 * * * ?
+
+pushgateway:
+  server:
+    cron: 0 0 5 29 2 ?
+    url: 10.142.157.193:9091

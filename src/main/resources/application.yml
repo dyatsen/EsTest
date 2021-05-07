@@ -1,0 +1,46 @@
+
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+spring:
+  jackson:
+    time-zone: GMT+8
+
+  elasticsearch:
+    rest:
+      uris:
+        - http://localhost:9200
+  redis:
+    timeout: 60000
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+  profiles:
+    active: prod
+
+jasypt:
+  encryptor:
+    password: report
+
+swagger:
+  version: 1.0
+  groupName: report
+  title: collect-report
+  description: collect-report 接口文档
+  basePackage: com.guangyan.collect.report.controller
+
+ok:
+  http:
+    connect-timeout: 30
+    read-timeout: 30
+    write-timeout: 30
+    # 连接池中整体的空闲连接的最大数量
+    max-idle-connections: 200
+    # 连接空闲时间最多为 300 秒
+    keep-alive-duration: 300
