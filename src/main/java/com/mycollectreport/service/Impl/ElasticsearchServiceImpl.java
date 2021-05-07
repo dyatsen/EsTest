@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,16 +30,19 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
     RestHighLevelClient restHighLevelClient;
 
     @Override
-    public Map<String, Integer> getCounts() throws IOException {
+    public Map<String, Long> getCounts() throws IOException {
         TermsAggregationBuilder aggregationBuilder = AggregationBuilders.terms("success_count_No").field("success_count");
         SearchRequest aggSearchRequest = esUtil.getAggSearchRequest(aggregationBuilder,"20210506index");
         SearchResponse searchResponse = restHighLevelClient.search(aggSearchRequest, RequestOptions.DEFAULT);
         Terms terms = searchResponse.getAggregations().get("success_count_No");
+
+        Map<String, Long> bucketMap = new HashMap<>();
         for (Terms.Bucket ele : terms.getBuckets()) {
             System.out.println("Bucket的key是：" + ele.getKeyAsString() + "Bucket的value是：" + ele.getDocCount());
             System.out.println(ele);
+            bucketMap.put(ele.getKeyAsString(), ele.getDocCount());
         }
 
-        return null;
+        return bucketMap;
     }
 }
