@@ -31,15 +31,30 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
 
     @Override
     public Map<String, Long> getCounts() throws IOException {
-        TermsAggregationBuilder aggregationBuilder = AggregationBuilders.terms("success_count_No").field("success_count");
-        SearchRequest aggSearchRequest = esUtil.getAggSearchRequest(aggregationBuilder,"20210506index");
+        TermsAggregationBuilder aggregationBuilder = AggregationBuilders
+                .terms("success_count_No")
+                .field("host_ip.keyword")
+                .size(4000);
+
+        TermsAggregationBuilder logType = AggregationBuilders
+                .terms("logType")
+                .field("data_type.keyword")
+                .size(10);
+
+        // 把logType嵌套在aggregationBuilder里面
+        aggregationBuilder.subAggregation(logType);
+        SearchRequest aggSearchRequest = esUtil.getAggSearchRequest(aggregationBuilder,"20210407index");
         SearchResponse searchResponse = restHighLevelClient.search(aggSearchRequest, RequestOptions.DEFAULT);
         Terms terms = searchResponse.getAggregations().get("success_count_No");
 
         Map<String, Long> bucketMap = new HashMap<>();
         for (Terms.Bucket ele : terms.getBuckets()) {
             System.out.println("Bucket的key是：" + ele.getKeyAsString() + "Bucket的value是：" + ele.getDocCount());
-            System.out.println(ele);
+            Terms logType1 = ele.getAggregations().get("logType");
+            for (Terms.Bucket logTypeEle : logType1.getBuckets()) {
+                System.out.println("嵌套的Bucket的key是：" + logTypeEle.getKeyAsString() + "嵌套的Bucket的value是：" + logTypeEle.getDocCount());
+            }
+            // System.out.println(ele);
             bucketMap.put(ele.getKeyAsString(), ele.getDocCount());
         }
 
